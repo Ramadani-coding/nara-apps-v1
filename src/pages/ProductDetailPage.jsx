@@ -1,63 +1,63 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import EmptyState from '../components/common/EmptyState'
-import PhoneHero from '../components/layout/PhoneHero'
-import OrderConfirmationModal from '../components/product/OrderConfirmationModal'
-import ProductHero from '../components/product/ProductHero'
-import VariantCard from '../components/product/VariantCard'
-import { useCheckout } from '../context/useCheckout'
-import { getStorefrontProductBySlug } from '../utils/storefrontApi'
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import EmptyState from "../components/common/EmptyState";
+import PhoneHero from "../components/layout/PhoneHero";
+import OrderConfirmationModal from "../components/product/OrderConfirmationModal";
+import ProductHero from "../components/product/ProductHero";
+import VariantCard from "../components/product/VariantCard";
+import { useCheckout } from "../context/useCheckout";
+import { getStorefrontProductBySlug } from "../utils/storefrontApi";
 
 function ProductDetailPage() {
-  const { slug } = useParams()
-  const navigate = useNavigate()
-  const { setCheckout } = useCheckout()
-  const [product, setProduct] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [selectedVariant, setSelectedVariant] = useState(null)
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const { setCheckout } = useCheckout();
+  const [product, setProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
   const handleCloseModal = useCallback(() => {
-    setSelectedVariant(null)
-  }, [])
+    setSelectedVariant(null);
+  }, []);
 
   useEffect(() => {
-    let isMounted = true
+    let isMounted = true;
 
     async function loadProduct() {
-      setIsLoading(true)
-      setError('')
+      setIsLoading(true);
+      setError("");
 
       try {
-        const data = await getStorefrontProductBySlug(slug)
-        if (!isMounted) return
-        setProduct(data)
+        const data = await getStorefrontProductBySlug(slug);
+        if (!isMounted) return;
+        setProduct(data);
       } catch (loadError) {
-        if (!isMounted) return
-        setError(loadError.message || 'Produk storefront tidak ditemukan.')
-        setProduct(null)
+        if (!isMounted) return;
+        setError(loadError.message || "Produk storefront tidak ditemukan.");
+        setProduct(null);
       } finally {
         if (isMounted) {
-          setIsLoading(false)
+          setIsLoading(false);
         }
       }
     }
 
-    loadProduct()
+    loadProduct();
     return () => {
-      isMounted = false
-    }
-  }, [slug])
+      isMounted = false;
+    };
+  }, [slug]);
 
   if (isLoading) {
     return (
       <div className="px-6 py-10">
         <EmptyState
           title="Memuat produk"
-          description="Sedang mengambil detail paket dari backend."
+          description="Sedang mengambil detail paket dari server."
         />
       </div>
-    )
+    );
   }
 
   if (!product) {
@@ -65,10 +65,13 @@ function ProductDetailPage() {
       <div className="px-6 py-10">
         <EmptyState
           title="Produk tidak ditemukan"
-          description={error || 'Slug produk tidak valid. Kembali ke Home untuk pilih produk lain.'}
+          description={
+            error ||
+            "Slug produk tidak valid. Kembali ke Home untuk pilih produk lain."
+          }
         />
       </div>
-    )
+    );
   }
 
   return (
@@ -83,10 +86,9 @@ function ProductDetailPage() {
       <div className="space-y-5 px-1 sm:space-y-6">
         <ProductHero product={product} />
         <section>
-          <h2 className="text-[18px] font-bold text-nara-ink">List Varian</h2>
-          <p className="mt-2 max-w-[340px] text-sm leading-6 text-nara-muted">
-            Harga dan durasi diambil langsung dari backend agar storefront selalu sinkron.
-          </p>
+          <h2 className="text-[18px] font-bold text-nara-ink text-center">
+            PILIH PAKET
+          </h2>
           <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-5">
             {product.variants.map((variant) => (
               <VariantCard
@@ -94,19 +96,20 @@ function ProductDetailPage() {
                 variant={variant}
                 product={product}
                 onChoose={() => {
-                  if (variant.stock <= 0) return
-                  setSelectedVariant(variant)
+                  if (variant.stock <= 0) return;
+                  setSelectedVariant(variant);
                 }}
               />
             ))}
           </div>
         </section>
 
-        <div className="rounded-[18px] bg-nara-accent-soft px-4 py-3">
+        {/* <div className="rounded-[18px] bg-nara-accent-soft px-4 py-3">
           <p className="text-sm font-medium text-[#b45c31]">
-            Invoice nyata akan dibuat saat simulasi pembayaran di halaman checkout.
+            Invoice nyata akan dibuat saat simulasi pembayaran di halaman
+            checkout.
           </p>
-        </div>
+        </div> */}
       </div>
 
       {selectedVariant ? (
@@ -122,14 +125,14 @@ function ProductDetailPage() {
               paymentMethod,
               phoneNumber,
               subtotal,
-            })
-            handleCloseModal()
-            navigate('/checkout')
+            });
+            handleCloseModal();
+            navigate("/checkout");
           }}
         />
       ) : null}
     </div>
-  )
+  );
 }
 
-export default ProductDetailPage
+export default ProductDetailPage;

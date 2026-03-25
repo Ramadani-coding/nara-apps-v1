@@ -6,6 +6,7 @@ function PhoneHero({
   children,
   compact = false,
   showBackButton = false,
+  hideTextBlock = false,
 }) {
   const navigate = useNavigate()
 
@@ -42,16 +43,18 @@ function PhoneHero({
 
         {children}
 
-        <div className={compact ? 'pt-3' : 'pt-4'}>
-          <h1 className="max-w-[360px] text-[28px] font-extrabold leading-[1.15] sm:text-[32px]">
-            {title}
-          </h1>
-          {subtitle ? (
-            <p className="mt-3 max-w-[420px] text-sm leading-6 text-white/90 sm:text-[15px]">
-              {subtitle}
-            </p>
-          ) : null}
-        </div>
+        {hideTextBlock ? null : (
+          <div className={compact ? 'pt-3' : 'pt-4'}>
+            <h1 className="max-w-[360px] text-[28px] font-extrabold leading-[1.15] sm:text-[32px]">
+              {title}
+            </h1>
+            {subtitle ? (
+              <p className="mt-3 max-w-[420px] text-sm leading-6 text-white/90 sm:text-[15px]">
+                {subtitle}
+              </p>
+            ) : null}
+          </div>
+        )}
       </div>
     </header>
   )

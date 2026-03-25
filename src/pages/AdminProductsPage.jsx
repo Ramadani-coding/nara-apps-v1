@@ -1,26 +1,30 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useAdminToast } from '../context/useAdminToast'
-import { clearAdminSession } from '../utils/adminAuth'
-import { getAdminProducts, syncAdminCatalog, updateAdminMargin } from '../utils/adminApi'
-import { formatRupiah } from '../utils/formatPrice'
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAdminToast } from "../context/useAdminToast";
+import { clearAdminSession } from "../utils/adminAuth";
+import {
+  getAdminProducts,
+  syncAdminCatalog,
+  updateAdminMargin,
+} from "../utils/adminApi";
+import { formatRupiah } from "../utils/formatPrice";
 
 function AdminProductsPage() {
-  const toast = useAdminToast()
-  const [products, setProducts] = useState([])
-  const [search, setSearch] = useState('')
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSyncing, setIsSyncing] = useState(false)
-  const [savingId, setSavingId] = useState('')
-  const [draftMargins, setDraftMargins] = useState({})
+  const toast = useAdminToast();
+  const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [savingId, setSavingId] = useState("");
+  const [draftMargins, setDraftMargins] = useState({});
 
   const loadProducts = useCallback(async () => {
-    setIsLoading(true)
-    setError('')
+    setIsLoading(true);
+    setError("");
 
     try {
-      const data = await getAdminProducts()
-      setProducts(Array.isArray(data) ? data : [])
+      const data = await getAdminProducts();
+      setProducts(Array.isArray(data) ? data : []);
       setDraftMargins(
         Object.fromEntries(
           (Array.isArray(data) ? data : []).map((product) => [
@@ -28,43 +32,46 @@ function AdminProductsPage() {
             String(product.marginAmount ?? 0),
           ]),
         ),
-      )
+      );
     } catch (loadError) {
       if (loadError.status === 401) {
-        clearAdminSession()
-        window.location.replace('/admin/login')
-        return
+        clearAdminSession();
+        window.location.replace("/admin/login");
+        return;
       }
-      setError(loadError.message || 'Gagal memuat katalog admin.')
-      toast.error('Gagal memuat katalog', loadError.message || 'Coba muat ulang halaman admin.')
+      setError(loadError.message || "Gagal memuat katalog admin.");
+      toast.error(
+        "Gagal memuat katalog",
+        loadError.message || "Coba muat ulang halaman admin.",
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [toast])
+  }, [toast]);
 
   useEffect(() => {
-    loadProducts()
-  }, [loadProducts])
+    loadProducts();
+  }, [loadProducts]);
 
   const filteredProducts = useMemo(() => {
-    const query = search.trim().toLowerCase()
-    if (!query) return products
+    const query = search.trim().toLowerCase();
+    if (!query) return products;
 
     return products.filter((product) => {
       return (
         product.name.toLowerCase().includes(query) ||
         String(product.providerProductId).includes(query)
-      )
-    })
-  }, [products, search])
+      );
+    });
+  }, [products, search]);
 
   async function handleSyncCatalog() {
-    setIsSyncing(true)
-    setError('')
+    setIsSyncing(true);
+    setError("");
 
     try {
-      const data = await syncAdminCatalog()
-      setProducts(Array.isArray(data) ? data : [])
+      const data = await syncAdminCatalog();
+      setProducts(Array.isArray(data) ? data : []);
       setDraftMargins(
         Object.fromEntries(
           (Array.isArray(data) ? data : []).map((product) => [
@@ -72,35 +79,36 @@ function AdminProductsPage() {
             String(product.marginAmount ?? 0),
           ]),
         ),
-      )
+      );
       toast.success(
-        'Katalog berhasil disinkronkan',
+        "Katalog berhasil disinkronkan",
         `${Array.isArray(data) ? data.length : 0} produk provider sudah diperbarui.`,
-      )
+      );
     } catch (syncError) {
       if (syncError.status === 401) {
-        clearAdminSession()
-        window.location.replace('/admin/login')
-        return
+        clearAdminSession();
+        window.location.replace("/admin/login");
+        return;
       }
-      setError(syncError.message || 'Gagal sinkron katalog dari Premku.')
+      setError(syncError.message || "Gagal sinkron katalog dari Premku.");
       toast.error(
-        'Sinkron katalog gagal',
-        syncError.message || 'Backend tidak berhasil menarik data terbaru dari Premku.',
-      )
+        "Sinkron katalog gagal",
+        syncError.message ||
+          "Backend tidak berhasil menarik data terbaru dari Premku.",
+      );
     } finally {
-      setIsSyncing(false)
+      setIsSyncing(false);
     }
   }
 
   async function handleSaveMargin(product) {
-    const rawValue = draftMargins[product.id] ?? '0'
-    const marginAmount = Math.max(0, Number(rawValue || 0))
-    setSavingId(product.id)
-    setError('')
+    const rawValue = draftMargins[product.id] ?? "0";
+    const marginAmount = Math.max(0, Number(rawValue || 0));
+    setSavingId(product.id);
+    setError("");
 
     try {
-      const updatedProduct = await updateAdminMargin(product.id, marginAmount)
+      const updatedProduct = await updateAdminMargin(product.id, marginAmount);
       setProducts((current) =>
         current.map((item) =>
           item.id === product.id
@@ -110,28 +118,28 @@ function AdminProductsPage() {
               }
             : item,
         ),
-      )
+      );
       setDraftMargins((current) => ({
         ...current,
         [product.id]: String(updatedProduct.marginAmount ?? 0),
-      }))
+      }));
       toast.success(
-        'Margin berhasil diperbarui',
+        "Margin berhasil diperbarui",
         `Harga jual ${updatedProduct.name} sudah memakai margin terbaru.`,
-      )
+      );
     } catch (saveError) {
       if (saveError.status === 401) {
-        clearAdminSession()
-        window.location.replace('/admin/login')
-        return
+        clearAdminSession();
+        window.location.replace("/admin/login");
+        return;
       }
-      setError(saveError.message || 'Gagal menyimpan margin produk.')
+      setError(saveError.message || "Gagal menyimpan margin produk.");
       toast.error(
-        'Simpan margin gagal',
-        saveError.message || 'Perubahan margin belum tersimpan ke backend.',
-      )
+        "Simpan margin gagal",
+        saveError.message || "Perubahan margin belum tersimpan ke backend.",
+      );
     } finally {
-      setSavingId('')
+      setSavingId("");
     }
   }
 
@@ -147,8 +155,9 @@ function AdminProductsPage() {
               Kelola harga jual dari katalog provider
             </h1>
             <p className="mt-3 text-[15px] leading-7 text-nara-muted">
-              Harga dasar datang dari API Premku. Admin tinggal menambahkan margin
-              nominal rupiah agar backend menghitung harga jual final yang dibayar user.
+              Harga dasar datang dari API Premku. Admin tinggal menambahkan
+              margin nominal rupiah agar backend menghitung harga jual final
+              yang dibayar user.
             </p>
           </div>
 
@@ -158,7 +167,7 @@ function AdminProductsPage() {
             disabled={isSyncing}
             className="inline-flex items-center justify-center rounded-[20px] bg-nara-navy px-5 py-3 text-sm font-bold text-white shadow-[0_18px_40px_rgba(28,37,59,0.2)] transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSyncing ? 'Sinkron...' : 'Sync dari Premku'}
+            {isSyncing ? "Sinkron..." : "Sync dari Premku"}
           </button>
         </div>
 
@@ -181,7 +190,7 @@ function AdminProductsPage() {
 
       {isLoading ? (
         <div className="rounded-[30px] border border-[#e7e9f1] bg-white px-6 py-8 text-sm text-nara-muted shadow-[0_18px_40px_rgba(24,32,56,0.06)]">
-          Memuat katalog backend...
+          Memuat katalog server...
         </div>
       ) : (
         <div className="space-y-5">
@@ -197,7 +206,8 @@ function AdminProductsPage() {
                       {product.name}
                     </h2>
                     <p className="mt-2 max-w-[72ch] text-sm leading-6 text-nara-muted">
-                      {product.description || 'Deskripsi produk belum tersedia dari provider.'}
+                      {product.description ||
+                        "Deskripsi produk belum tersedia dari provider."}
                     </p>
                   </div>
                   <div className="text-right text-sm text-nara-muted">
@@ -221,12 +231,14 @@ function AdminProductsPage() {
                       Margin Admin
                     </span>
                     <div className="mt-2 flex items-center gap-2">
-                      <span className="text-sm font-bold text-nara-muted">Rp</span>
+                      <span className="text-sm font-bold text-nara-muted">
+                        Rp
+                      </span>
                       <input
                         type="number"
                         min="0"
                         step="1000"
-                        value={draftMargins[product.id] ?? '0'}
+                        value={draftMargins[product.id] ?? "0"}
                         onChange={(event) =>
                           setDraftMargins((current) => ({
                             ...current,
@@ -245,7 +257,14 @@ function AdminProductsPage() {
                     <p className="mt-2 text-[20px] font-extrabold tracking-[-0.03em] text-nara-accent">
                       {formatRupiah(
                         (product.basePrice || 0) +
-                          Math.max(0, Number(draftMargins[product.id] ?? product.marginAmount ?? 0)),
+                          Math.max(
+                            0,
+                            Number(
+                              draftMargins[product.id] ??
+                                product.marginAmount ??
+                                0,
+                            ),
+                          ),
                       )}
                     </p>
                   </div>
@@ -256,20 +275,21 @@ function AdminProductsPage() {
                     disabled={savingId === product.id}
                     className="inline-flex items-center justify-center rounded-[20px] bg-[#fff4ee] px-5 py-3 text-sm font-bold text-nara-accent transition hover:bg-[#ffe7db] disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    {savingId === product.id ? 'Menyimpan...' : 'Simpan Margin'}
+                    {savingId === product.id ? "Menyimpan..." : "Simpan Margin"}
                   </button>
                 </div>
               </section>
             ))
           ) : (
             <div className="rounded-[30px] border border-dashed border-[#d9deea] bg-white px-6 py-10 text-center text-nara-muted shadow-[0_18px_40px_rgba(24,32,56,0.04)]">
-              Belum ada produk di backend. Klik `Sync dari Premku` untuk menarik katalog.
+              Belum ada produk di backend. Klik `Sync dari Premku` untuk menarik
+              katalog.
             </div>
           )}
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default AdminProductsPage
+export default AdminProductsPage;
