@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nara Premium</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      (() => {
+        const ORDER_KEY = 'nara-premium-orders'
+        const CHECKOUT_KEY = 'nara-premium-checkout'
+        const successOrder = {
+          invoice: 'NARA-INV-240325',
+          productId: 'netflix',
+          variantId: 'netflix-3b',
+          status: 'success',
+          accountEmail: 'dummy.netflix@mail.com',
+          accountPassword: 'Netflix123!',
+        }
+        const baseOrders = [
+          {
+            invoice: 'NARA-INV-1001',
+            productId: 'spotify',
+            variantId: 'spotify-1b',
+            status: 'pending',
+          },
+          {
+            invoice: 'NARA-INV-1002',
+            productId: 'canva',
+            variantId: 'canva-1t',
+            status: 'success',
+            accountEmail: 'dummy.canva@mail.com',
+            accountPassword: 'Canva123!',
+          },
+          successOrder,
+        ]
+
+        try {
+          localStorage.setItem(ORDER_KEY, JSON.stringify(baseOrders))
+
+          if (window.location.pathname === '/checkout') {
+            localStorage.setItem(
+              CHECKOUT_KEY,
+              JSON.stringify({
+                productId: 'netflix',
+                variantId: 'netflix-3b',
+                invoice: successOrder.invoice,
+                status: 'pending',
+              }),
+            )
+          }
+        } catch {}
+      })()
+    </script>
+    <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

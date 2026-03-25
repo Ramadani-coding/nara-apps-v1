@@ -1,0 +1,4 @@
+[
+  { "invoice": "NARA-INV-1001", "productId": "spotify", "variantId": "spotify-1b", "status": "pending" },
+  { "invoice": "NARA-INV-1002", "productId": "canva", "variantId": "canva-1t", "status": "success", "accountEmail": "dummy.canva@mail.com", "accountPassword": "Canva123!" }
+]

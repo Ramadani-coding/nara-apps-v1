@@ -1,0 +1,68 @@
+[
+  {
+    "id": "netflix",
+    "slug": "netflix-premium",
+    "name": "Netflix Premium",
+    "category": "Streaming",
+    "image": "netflix",
+    "description": "Film, drama, dan series premium tanpa ribet.",
+    "variants": [
+      { "id": "netflix-1b", "label": "1 Bulan", "duration": "1 bulan", "price": 45000, "stock": 15, "description": "Netflix" },
+      { "id": "netflix-3b", "label": "3 Bulan", "duration": "3 bulan", "price": 120000, "stock": 3, "description": "Netflix" },
+      { "id": "netflix-6b", "label": "6 Bulan", "duration": "6 bulan", "price": 210000, "stock": 0, "description": "Netflix" },
+      { "id": "netflix-1t", "label": "1 Tahun", "duration": "1 tahun", "price": 420000, "stock": 5, "description": "Netflix" }
+    ]
+  },
+  {
+    "id": "spotify",
+    "slug": "spotify-premium",
+    "name": "Spotify Premium",
+    "category": "Music",
+    "image": "spotify",
+    "description": "Streaming musik premium untuk dengar tanpa iklan.",
+    "variants": [
+      { "id": "spotify-1b", "label": "1 Bulan", "duration": "1 bulan", "price": 22000, "stock": 10, "description": "Spotify" },
+      { "id": "spotify-3b", "label": "3 Bulan", "duration": "3 bulan", "price": 60000, "stock": 8, "description": "Spotify" },
+      { "id": "spotify-6b", "label": "6 Bulan", "duration": "6 bulan", "price": 108000, "stock": 6, "description": "Spotify" }
+    ]
+  },
+  {
+    "id": "canva",
+    "slug": "canva-pro",
+    "name": "Canva Pro",
+    "category": "Tools",
+    "image": "canva",
+    "description": "Template premium dan fitur desain tanpa batas.",
+    "variants": [
+      { "id": "canva-1b", "label": "1 Bulan", "duration": "1 bulan", "price": 28000, "stock": 12, "description": "Canva" },
+      { "id": "canva-3b", "label": "3 Bulan", "duration": "3 bulan", "price": 76000, "stock": 7, "description": "Canva" },
+      { "id": "canva-1t", "label": "1 Tahun", "duration": "1 tahun", "price": 249000, "stock": 4, "description": "Canva" }
+    ]
+  },
+  {
+    "id": "disney",
+    "slug": "disney-hotstar",
+    "name": "Disney+ Hotstar",
+    "category": "Streaming",
+    "image": "disney",
+    "description": "Akses film blockbuster dan serial keluarga premium.",
+    "variants": [
+      { "id": "disney-1b", "label": "1 Bulan", "duration": "1 bulan", "price": 39000, "stock": 11, "description": "Disney+" },
+      { "id": "disney-3b", "label": "3 Bulan", "duration": "3 bulan", "price": 99000, "stock": 6, "description": "Disney+" },
+      { "id": "disney-1t", "label": "1 Tahun", "duration": "1 tahun", "price": 315000, "stock": 3, "description": "Disney+" }
+    ]
+  },
+  {
+    "id": "youtube",
+    "slug": "youtube-premium",
+    "name": "YouTube Premium",
+    "category": "Video",
+    "image": "youtube",
+    "description": "Nonton bebas iklan dan putar video di background.",
+    "variants": [
+      { "id": "youtube-1b", "label": "1 Bulan", "duration": "1 bulan", "price": 25000, "stock": 14, "description": "YouTube" },
+      { "id": "youtube-3b", "label": "3 Bulan", "duration": "3 bulan", "price": 69000, "stock": 9, "description": "YouTube" },
+      { "id": "youtube-1t", "label": "1 Tahun", "duration": "1 tahun", "price": 228000, "stock": 5, "description": "YouTube" }
+    ]
+  }
+]
