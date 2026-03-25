@@ -38,6 +38,14 @@ export function createApp() {
   )
   app.use(express.json())
 
+  app.get('/', (req, res) => {
+    res.json({
+      success: true,
+      message: 'Nara Premium backend aktif.',
+      health: '/health',
+    })
+  })
+
   app.get('/health', (req, res) => {
     res.json({ success: true, message: 'Backend Nara Premium aktif.' })
   })
